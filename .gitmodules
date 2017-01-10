@@ -1,3 +1,10 @@
 [submodule "guppy/guppy"]
 	path = guppy/guppy
 	url = https://github.com/daniel3735928559/guppy.git
+[submodule "category"]
+	path = category
+	url = https://github.com/daniel3735928559/category.git
+	branch = mango
+[submodule "jam"]
+	path = jam
+	url = https://github.com/daniel3735928559/jam.git
