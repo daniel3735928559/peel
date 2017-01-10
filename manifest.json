@@ -1,0 +1,12 @@
+{
+    "nodes":{
+	"jam":{
+	    "run":"jam",
+	    "lang":"c"
+	},
+	"category":{
+	    "run":"node cat_node.js",
+	    "lang":"js"
+	}
+    }
+}
