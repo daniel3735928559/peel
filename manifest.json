@@ -1,7 +1,7 @@
 {
     "nodes":{
 	"jam":{
-	    "run":"jam",
+	    "run":"./jam",
 	    "lang":"c"
 	},
 	"category":{
