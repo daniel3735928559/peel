@@ -33,10 +33,10 @@ class pan(m_node):
             else:
                 cmd_args += " -sF"
         
-        cmd_args += " " + args['targets']
+        cmd_args += " " + args['targets']['ip']
         cmd = "nmap " + cmd_args
         print(cmd)
-        subprocess.Popen(shlex.split(cmd), env=nenv)
+        subprocess.Popen(shlex.split(cmd))
         return {'excited':args['str']+'!'}
 
 pan()

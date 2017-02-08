@@ -4,6 +4,24 @@
 	    "run":"./jam",
 	    "lang":"c"
 	},
+	"pan":{
+	    "run":"python pan.py",
+	    "lang":"py"
+	},
+	"pan_fe":{
+	    "lang":"mu",
+	    "dir":"./pan_fe",
+	    "ws_port":"6003",
+	    "http_port":"6004",
+            "if":"pan_fe.yaml"
+	},
+	"guppy":{
+	    "lang":"mu",
+	    "dir":"./guppy",
+	    "ws_port":"6001",
+	    "http_port":"6002",
+            "if":"guppy.yaml"
+	},
 	"category":{
 	    "run":"node cat_node.js",
 	    "lang":"js"
