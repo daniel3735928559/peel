@@ -1,3 +1,4 @@
+name: pan
 inputs:
   scan:
     args:
