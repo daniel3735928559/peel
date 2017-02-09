@@ -1,23 +1,35 @@
 var app = angular.module('app',[]);
 
-app.controller("ElderberryController", ['$scope','$http', '$window', '$timeout', '$location', function($scope, $http, $window, $timeout, $location){    
+app.controller("PanController", ['$scope', '$sce', function($scope, $sce){    
     $scope.scans = {
 	"tcp_flags":
 	{
 	    "flags":["URG","ACK","PSH","RST","SYN","FIN"],
-	    "scan_type":["No response = filtered","No response = open|filtered"],
-	    "help":"Select the TCP flags you want to scan.  Common combinations include: \n* SYN: For half-opening a connection.  This should elicit a response without making a full connection to the server, likely not appearing in the server's logs.\n* ACK: "
+	    "scan_type":["filtered","open|filtered"],
 	},
-	"udp":{"help":"Send a UDP packet to the host"},
-	"idle":{
-	    "options":["zombie_host"]},
-	"sctp":{"help":""},
-	"ip_proto":{"help":""},
-	"ftp":{"help":""}
     };
+    
+    $scope.help_text = {
+	"tcp_flags":$sce.trustAsHtml("Send a single packet with specified TCP flags set.  Common combinations include: <ul> \
+<li>SYN: Should elicit a response without making a full connection.</li> \
+<li>ACK: Used to determine firewalled ports.</li> \
+<li>FIN: </li> \
+<li>FIN/ACK: Used to identify BSD systems.</li> \
+<li>FIN/PSH/URG: </li> \
+<li>[None]: </li></ul>"),
+	"idle":"Lorem ipsum",
+	"udp":"Send a UDP packet to the host",
+	"tcp_connect":"Attempt a full TCP connection with the target port",
+	"ftp":"Lorem Ipsum",
+	"window":"Lorem Ipsum",
+	"sctp_init":"Lorem Ipsum",
+	"sctp_cookie":"Lorem Ipsum",
+	"ip_proto":"Lorem Ipsum",
+	
+    }
     $scope.speeds = {}
     $scope.top_ports = 1000;
-    $scope.scan_type = "No response = filtered";
+    $scope.scan_type = "filtered";
     $scope.ports = "asd";
 
     // Evasion options
@@ -25,6 +37,7 @@ app.controller("ElderberryController", ['$scope','$http', '$window', '$timeout',
     $scope.mtu = 0;
     $scope.decoys = [];
 
+    $scope.active_scans = {'tcp_flags':true, 'udp':false, 'idle':false, 'sctp':false, 'ip_proto':false, 'ftp':false};
     $scope.flag_flags = {"URG":false,"ACK":false,"PSH":false,"RST":false,"SYN":true,"FIN":false};
     $scope.flag_toggle_flag = function(flag){
 	$scope.flag_flags[flag] = !$scope.flag_flags[flag];
@@ -32,8 +45,5 @@ app.controller("ElderberryController", ['$scope','$http', '$window', '$timeout',
     }
     $scope.flag_set_type = function(t){
 	$scope.scan_type = t;
-    }
-    $scope.scan = function(){
-	socket.emit('scan', data);
     }
 }]);
