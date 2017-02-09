@@ -8,9 +8,9 @@
 	    "run":"python pan.py",
 	    "lang":"py"
 	},
-	"pan_fe":{
+	"pan_web":{
 	    "lang":"mu",
-	    "dir":"./pan_fe",
+	    "dir":"./pan/frontend",
 	    "ws_port":"6003",
 	    "http_port":"6004",
             "if":"pan_fe.yaml"

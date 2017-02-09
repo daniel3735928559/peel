@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Pan</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- <script type="text/javascript" src="index.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+    <script type="text/javascript" src="ng.js"></script>
+    <script type="text/javascript" src="/mangojs/mu.js"></script>
+    <script type="text/javascript">
+     var mango;
+     window.onload = function(){
+         mango = new Mango("6003",{"results":do_results});
+     }
+     var do_results = function(header, args){
+	 console.log("RES",header, hargs);
+     }
+     var scan = function(){
+         mango.m_send("scan",{"str":document.getElementById('tosend').value});
+     }
+    </script>
+
+    <link rel="stylesheet" href="index.css">
+</head>
+<body ng-app="app" style="width:100%;background-color:#333;color:#ddd;">
+    <div id="super" ng-controller="ElderberryController" class="container">
+	<div class="row">
+	    <div class="col-sm-10">
+		<div id="wrapper" class="row">
+		    <div class="col-sm-3">TCP flags scan: </div>
+		    <span ng-repeat="f in scans.tcp_flags.flags">
+			<button type="button" class="col-sm-1 btn" ng-class="{true: 'btn-primary', false: 'btn-danger'}[flag_flags[f]]" ng-click="flag_toggle_flag(f)">{{f}}</button>
+		    </span>
+		</div>
+		<div id="wrapper" class="row">
+		    <div class="col-sm-3">TCP scan type: </div>
+		    <span ng-repeat="t in scans.tcp_flags.scan_type">
+			<button type="button" class="col-sm-4 btn" ng-class="scan_type == t ? 'btn-primary' : 'btn-danger'" ng-click="flag_set_type(t)">{{t}}</button>
+		    </span>
+		</div>
+	    </div>
+	</div>
+    </div>
+</body>
+</html>
