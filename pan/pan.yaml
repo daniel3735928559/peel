@@ -33,13 +33,8 @@ inputs:
                 FIN:
                   type: boolean
             scan_type:
-              type: oneof
-              default: {"no_response_filtered": true}
-              values:
-                no_response_filtered:
-                  type: boolean
-                no_response_open_filtered:
-                  type: boolean
+              type: string
+              values: ["filtered","open|filtered"]
         idle:
           optional: true
           type: dict
@@ -77,3 +72,7 @@ inputs:
       type: any
 outputs:
   results:
+    xml:
+      type: string
+    raw:
+      type: string

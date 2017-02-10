@@ -1,5 +1,5 @@
 from libmango import *
-import shlex, subprocess
+import shlex, subprocess, tempfile, os
 
 class pan(m_node):
     def __init__(self):
@@ -9,8 +9,8 @@ class pan(m_node):
     def scan(self,header,args):
         cmd_args = ""
         
-        if 'ports' in args:
-            cmd_args += " -p " + args['ports']
+        if 'ports' in args['targets']:
+            cmd_args += " -p " + args['targets']['ports']
             
         if not args['scans'].get('ping', False): cmd_args += " -Pn"
             
@@ -28,15 +28,23 @@ class pan(m_node):
         if 'tcp_flags' in args['scans']:
             flags = args['scans']['tcp_flags']['flags']
             cmd_args += " --scanflags \"" + "".join([f for f in flags if flags[f]]) + "\""
-            if args['scans']['tcp_flags']['scan_type'].get('no_response_filtered',False):
-                cmd_args += " -sA"
+            if args['scans']['tcp_flags']['scan_type'] == "filtered":
+                cmd_args += " -sS"
             else:
                 cmd_args += " -sF"
         
         cmd_args += " " + args['targets']['ip']
-        cmd = "nmap " + cmd_args
-        print(cmd)
-        subprocess.Popen(shlex.split(cmd))
-        return {'excited':args['str']+'!'}
 
+        fd, filename = tempfile.mkstemp();
+        os.close(fd);
+        print("FN",filename)
+        cmd = "nmap -oX " + filename + cmd_args
+        print("CMD",cmd)
+        proc = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = proc.communicate()
+        print("OUTPUT",out,err)
+        with open(filename) as f:
+            xml_result = f.read()
+        self.m_send("results",{"raw":out.decode('ascii') + "\n" + err.decode('ascii'),'xml':xml_result})
+        print("DONE")
 pan()

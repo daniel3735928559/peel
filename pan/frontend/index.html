@@ -13,88 +13,143 @@
     <script type="text/javascript" src="/mangojs/mu.js"></script>
     <script type="text/javascript">
      var mango;
+     var nmap_xsl;
+     var load_xml = function(url) {
+	 xhttp = new XMLHttpRequest();
+	 xhttp.open("GET",url,false);
+	 xhttp.send("");
+	 return xhttp.responseXML;
+     }
      window.onload = function(){
-         mango = new Mango("6003",{"results":do_results});
+         mango = new Mango({"results":do_results});
+	 nmap_xsl = load_xml("https://svn.nmap.org/nmap/docs/nmap.xsl");
      }
      var do_results = function(header, args){
-	 console.log("RES",header, hargs);
+	 console.log("RES",header, args);
+	 raw = args['raw'];
+	 document.getElementById("raw_results").innerHTML = "<pre>" + raw + "</pre>";
+	 /* xsltProcessor=new XSLTProcessor();
+	    parser = new DOMParser();
+	    document.getElementById("results").innerHTML = "";
+	    xml = parser.parseFromString(args['xml'],"text/xml");
+	    xsltProcessor.importStylesheet(nmap_xsl);
+	    result = xsltProcessor.transformToFragment(xml,document);
+	    console.log(result)
+	    document.getElementById("results").appendChild(result);*/
      }
      var scan = function(){
 	 console.log("asda");
-	 var data = angular.element(document.getElementById('super')).scope().ports;
-         mango.m_send("scan",{"str":data});
+	 var data = angular.element(document.getElementById('super')).scope().get_params();
+	 console.log(JSON.stringify(data))
+         mango.m_send("scan",data);
      }
     </script>
     <style>
-      .top-buffer { margin-top:20px; }
-      .heading { font-size: 60pt; }
+     .top-buffer { margin-top:20px; }
+     .helptext { font-size: 10pt; }
+     .heading { font-size: 60pt; }
+     .heading2 { font-size: 40pt; }	    
+     .pretty_output{ background-color: #fff; }xs
+     input{ color: #333; }
+     textarea{ color: #333; }
     </style>
-
+    
     <link rel="stylesheet" href="index.css">
 </head>
 <body ng-app="app" style="width:100%;background-color:#333;color:#ddd;">
-  <div id="super" ng-controller="PanController" class="container">
-    <div class="row heading">
+    <div id="super" ng-controller="PanController" class="container">
+	<div class="row heading">
       Pan
+    </div>
+    <div class="row top-buffer heading2">
+	Targets
+    </div>
+    <div class="row top-buffer">
+	<span class="col-md-2">Target IPs:</span>
+	<textarea class="col-md-4" ng-model="targets.ip"></textarea>
+    </div>
+    <div class="row top-buffer">
+	<span class="col-md-2">Target ports:</span>
+	<input class="col-md-4" style="color:#333;" ng-model="targets.ports" />
+    </div>
+    <div class="row top-buffer heading2">
+	Scans
     </div>
     <div class="row">
 	<button class="col-md-1 btn" ng-class="active_scans['tcp_flags'] ? 'btn-success' : 'btn-link'" ng-click="active_scans['tcp_flags'] = !active_scans['tcp_flags']">TCP flags</button>
-	<div class="col-md-3" ng-bind-html="help_text['tcp_flags']"></div>
-	<div class="col-md-8" ng-if="active_scans['tcp_flags']">
-	    <div class="col-md-2">TCP flags: </div>
+	<div class="col-md-4 helptext" ng-bind-html="help_text['tcp_flags']"></div>
+	<div class="col-md-7" ng-if="active_scans['tcp_flags']">
 	    <span ng-repeat="f in scans.tcp_flags.flags">
-		<button type="button" class="col-md-1 btn" ng-class="{true: 'btn-success', false: 'btn-link'}[flag_flags[f]]" ng-click="flag_toggle_flag(f)">{{f}}</button>
+		<button type="button" class="col-md-1 btn" ng-class="{true: 'btn-success', false: 'btn-link'}[params.tcp_flags.flags[f]]" ng-click="flag_toggle_flag(f)">{{f}}</button>
 	    </span><br />
 	    <div class="top-buffer">
-		<div class="col-md-2">Scan type: </div>
 		<span ng-repeat="t in scans.tcp_flags.scan_type">
-		    <button type="button" class="col-md-3 btn" ng-class="scan_type == t ? 'btn-success' : 'btn-link'" ng-click="flag_set_type(t)">{{t}}</button>
+		    <button type="button" class="col-md-3 btn" ng-class="params.tcp_flags.scan_type == t ? 'btn-success' : 'btn-link'" ng-click="flag_set_type(t)">{{t}}</button>
 		</span>
 	    </div>
 	</div>
     </div>
     <div class="row top-buffer">
 	<button class="col-md-1 btn" ng-class="active_scans['idle'] ? 'btn-success' : 'btn-link'" ng-click="active_scans['idle'] = !active_scans['idle']">Idle</button>
-	<div class="col-md-3">{{help_text['idle']}}</div>
-	<div class="col-md-8" ng-if="active_scans['idle']">
+	<div class="col-md-4 helptext">{{help_text['idle']}}</div>
+	<div class="col-md-7" ng-if="active_scans['idle']">
 	    <div class="col-md-2">Idle host: </div>
-	    <input class="col-md-2" ng-model="idle_zombie"></input>
+	    <input class="col-md-2" ng-model="praams.idle.zombie"></input>
 	</div>
     </div>
     <div class="row top-buffer">
 	<button class="col-md-1 btn" ng-class="active_scans['ftp'] ? 'btn-success' : 'btn-link'" ng-click="active_scans['ftp'] = !active_scans['ftp']">FTP</button>
-	<div class="col-md-3">{{help_text['ftp']}}</div>
-	<div class="col-md-8" ng-if="active_scans['ftp']">
-	    <div class="col-md-2">Ftp host: </div>
-	    <input class="col-md-2" ng-model="ftp_zombie"></input>
+	<div class="col-md-4 helptext">{{help_text['ftp']}}</div>
+	<div class="col-md-7" ng-if="active_scans['ftp']">
+	    <div class="col-md-2">Bounce host: </div>
+	    <input class="col-md-2" ng-model="praams.ftp.bounce"></input>
 	</div>
     </div>
     <div class="row top-buffer">
 	<button class="col-md-1 btn" ng-class="active_scans['tcp_connect'] ? 'btn-success' : 'btn-link'" ng-click="active_scans['tcp_connect'] = !active_scans['tcp_connect']">Connect</button>
-	<div class="col-md-3">{{help_text['tcp_connect']}}</div>
+	<div class="col-md-4 helptext">{{help_text['tcp_connect']}}</div>
     </div>
     <div class="row top-buffer">
 	<button class="col-md-1 btn" ng-class="active_scans['udp'] ? 'btn-success' : 'btn-link'" ng-click="active_scans['udp'] = !active_scans['udp']">UDP</button>
-	<div class="col-md-3">{{help_text['udp']}}</div>
+	<div class="col-md-4 helptext">{{help_text['udp']}}</div>
     </div>
     <div class="row top-buffer">
 	<button class="col-md-1 btn" ng-class="active_scans['sctp_init'] ? 'btn-success' : 'btn-link'" ng-click="active_scans['sctp_init'] = !active_scans['sctp_init']">SCTP INIT</button>
-	<div class="col-md-3">{{help_text['sctp_init']}}</div>
+	<div class="col-md-4 helptext">{{help_text['sctp_init']}}</div>
     </div>
     <div class="row top-buffer">
 	<button class="col-md-1 btn" ng-class="active_scans['sctp_cookie_echo'] ? 'btn-success' : 'btn-link'" ng-click="active_scans['sctp_cookie_echo'] = !active_scans['sctp_cookie_echo']">SCTP cookie</button>
-	<div class="col-md-3">{{help_text['sctp_cookie']}}</div>
+	<div class="col-md-4 helptext">{{help_text['sctp_cookie']}}</div>
     </div>
     <div class="row top-buffer">
 	<button class="col-md-1 btn" ng-class="active_scans['ip_proto'] ? 'btn-success' : 'btn-link'" ng-click="active_scans['ip_proto'] = !active_scans['ip_proto']">IP proto</button>
-	<div class="col-md-3">{{help_text['ip_proto']}}</div>
+	<div class="col-md-4 helptext">{{help_text['ip_proto']}}</div>
     </div>
     <div class="row top-buffer">
 	<button class="col-md-1 btn" ng-class="active_scans['window'] ? 'btn-success' : 'btn-link'" ng-click="active_scans['window'] = !active_scans['window']">Window</button>
-	<div class="col-md-3">{{help_text['window']}}</div>
+	<div class="col-md-4 helptext">{{help_text['window']}}</div>
+    </div>
+    <!-- <div class="row top-buffer heading2">
+	 Stealth
+	 </div> -->
+    <div class="row top-buffer heading2">
+	Start
+    </div>
+    <div class="row top-buffer heading2">
+      <button type="button" class="col-md-12 btn btn-danger" onclick="scan()">Start the scan!</button>
+    </div>
+    <div class="row top-buffer heading2">
+	Results
     </div>
     <div class="row top-buffer">
-      <button type="button" class="col-md-2 btn btn-danger" onclick="scan()">Start the scan</button>
+	<div class="col-md-12" id="raw_results">
+	    Raw results will go here...
+	</div>
+    </div>
+    <div class="row top-buffer">
+	<div class="col-md-12 pretty_output" id="results">
+	    Pretty results will go here...
+	</div>
     </div>
   </div>
 </div>

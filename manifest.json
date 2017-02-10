@@ -13,7 +13,7 @@
 	    "dir":"./pan/frontend",
 	    "ws_port":"6003",
 	    "http_port":"6004",
-            "if":"pan_fe.yaml"
+            "if":"pan_web.yaml"
 	},
 	"guppy":{
 	    "lang":"mu",
