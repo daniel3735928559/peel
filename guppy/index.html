@@ -3,26 +3,39 @@
 
 <head>
     <title>Guppy</title>
+
     <link rel="stylesheet" href="guppy/build/guppy.min.css">
+    <script type="text/javascript" src="/mangojs/reconnecting-websocket.min.js"></script>
     <script type="text/javascript" src="/mangojs/mu.js"></script>
     <script type="text/javascript" src="guppy/build/guppy.min.js"></script>
-    <script type="text/javascript" src="index.js"></script>
-    <link rel="stylesheet" href="index.css">
+    <script type="text/javascript">
+     window.onload = function(){
+        mango = new Mango({"set":function(header,args){console.log("DOING STUFF",header,args);}});
+	 var g1 = new Guppy("guppy1", {
+	     "events":{
+		 'done': function(event) { output('latex'); },
+		 'completion': console.log
+	     },
+	     "options":{
+		 //'blank_caret': "[?]",
+		 'empty_content': "\\color{gray}{\\text{Click here to start typing a mathematical expression}}"
+	     }
+	 });
+         Guppy.init_symbols(["guppy/sym/symbols.json","guppy/sym/extra_symbols.json"]);
+      }
+      function output(texttype) {
+          document.getElementById('stuff').innerHTML = texttype.toUpperCase() + ": <br />" + Guppy.instances.guppy1.backend.get_content(texttype);
+          mango.m_send("maths",{"latex":Guppy.instances.guppy1.backend.get_content("latex"),
+                                "text":Guppy.instances.guppy1.backend.get_content("text"),
+  			        "xml":Guppy.instances.guppy1.backend.get_content("xml")
+			 });    
+      }
+    </script>
 </head>
 
 <body>
-    <div id="guppy1"></div>
-
-    <div>Click the buttons to render the expression in various
-      plaintext formats</div> <br/>
-    
-    <div id="result">
-      <button class="btn btn-default" id="xml_btn" onclick="">XML</button>
-      <button class="btn btn-default" id="text_btn">Text</button>
-      <button class="btn btn-default" id="latex_btn">LaTeX</button>
-      <button class="btn btn-default btn-danger" id="clear_btn">Clear</button>
-      <div id="stuff"></div>
-    </div>
+    <div id="guppy1" style="width: 800px; border: 2px solid black; height: 100px; padding: 10px; box-shadow: 1px 1px 1px 0 lightgray inset; cursor: text;"></div>
+    <div id="stuff"></div>
 </body>
 
 </html>

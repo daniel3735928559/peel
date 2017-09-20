@@ -1,1 +1,16 @@
-dostuff:
+name: guppy
+version: 0.1
+
+inputs:
+  set:
+    xml: 
+      type: string
+
+outputs:
+  maths:
+    xml:
+      type: string
+    text:
+      type: string
+    latex: 
+      type: string
