@@ -5,7 +5,10 @@ inputs:
   im_recv:
     str:
       type: string
-      
+  goaway:
+    msg:
+      type: string
+      optional: true
 outputs:
   im_send_to:
     str:
