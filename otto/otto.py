@@ -1,5 +1,5 @@
 from libmango import *
-import random
+import random, shlex
 
 class otto(m_node):
     def __init__(self):
