@@ -1,0 +1,4 @@
+excite_py:
+  run: python otto.py
+  lang: py
+  if: otto.yaml

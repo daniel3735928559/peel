@@ -1,0 +1,13 @@
+name: otto
+description: "Auto-responder"
+
+inputs: 
+  im_recv:
+    str:
+      type: string
+      
+outputs:
+  im_send_to:
+    str:
+      type: string
+ 
