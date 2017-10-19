@@ -1,0 +1,12 @@
+name: emacs
+description: "An emacs wrapper"
+
+inputs: 
+  insert:
+    str:
+      type: string
+      
+outputs:
+  message:
+    str:
+      type: string

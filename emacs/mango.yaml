@@ -1,0 +1,4 @@
+emacs:
+  run: python emacs.py
+  lang: py
+  if: emacs.yaml
