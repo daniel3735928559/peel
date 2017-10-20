@@ -5,6 +5,7 @@ inputs:
   insert:
     str:
       type: string
+  buffer:
       
 outputs:
   message:
